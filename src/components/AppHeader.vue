@@ -4,10 +4,8 @@ export default {
 };
 </script>
 <template>
-  <header>
-    <div
-      class="container d-flex justify-content-between bg-primary text-white p-3"
-    >
+  <header class="bg-primary">
+    <div class="container d-flex justify-content-between text-white p-3">
       <div>logo</div>
       <nav>
         <ul class="list-unstyled p-0 m-0 d-flex gap-4">
