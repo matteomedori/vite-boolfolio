@@ -17,6 +17,10 @@ export default {
           <ProjectCard :project="project" />
         </div>
       </div>
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button class="btn btn-danger" @click="$emit('prevPage')">prev</button>
+        <button class="btn btn-danger" @click="$emit('nextPage')">next</button>
+      </div>
     </div>
   </main>
 </template>

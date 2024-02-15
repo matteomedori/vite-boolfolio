@@ -11,6 +11,8 @@ export default {
         projects: "/api/projects",
       },
       projects: [],
+      currentPage: 1,
+      lastPage: null,
     };
   },
   components: {
@@ -20,14 +22,30 @@ export default {
   methods: {
     getProjects() {
       axios
-        .get(this.baseUrl + this.apiUrls.projects)
+        .get(this.baseUrl + this.apiUrls.projects, {
+          params: {
+            page: this.currentPage,
+          },
+        })
         .then((response) => {
-          console.log(response.data.data);
-          this.projects = response.data.data;
+          this.lastPage = response.data.data.last_page;
+          this.projects = response.data.data.data;
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    nextpage() {
+      if (this.currentPage < this.lastPage) {
+        this.currentPage++;
+        this.getProjects();
+      }
+    },
+    prevpage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.getProjects();
+      }
     },
   },
   created() {
@@ -38,7 +56,7 @@ export default {
 
 <template>
   <AppHeader />
-  <AppMain :projects="projects" />
+  <AppMain :projects="projects" @nextPage="nextpage" @prevPage="prevpage" />
 </template>
 
 <style></style>
