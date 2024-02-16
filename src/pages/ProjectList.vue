@@ -1,5 +1,7 @@
 <script>
 import ProjectCard from "../components/ProjectCard.vue";
+import LoadingButtons from "../components/LoadingButtons.vue";
+import AppHeader from "../components/AppHeader.vue";
 import axios from "axios";
 export default {
   name: "ProjectList",
@@ -12,13 +14,17 @@ export default {
       projects: [],
       currentPage: 1,
       lastPage: null,
+      loading: false,
     };
   },
   components: {
     ProjectCard,
+    LoadingButtons,
+    AppHeader,
   },
   methods: {
     getProjects() {
+      this.loading = true;
       axios
         .get(this.baseUrl + this.apiUrls.projects, {
           params: {
@@ -31,6 +37,9 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     nextpage() {
@@ -52,17 +61,21 @@ export default {
 };
 </script>
 <template>
+  <AppHeader />
   <main>
     <div class="container py-4">
       <h1 class="text-center mb-4">Projects list</h1>
-      <div class="row gy-4">
+
+      <LoadingButtons v-if="loading" />
+
+      <div class="row gy-4" v-else>
         <div class="col col-md-3" v-for="project in projects">
           <ProjectCard :project="project" />
         </div>
-      </div>
-      <div class="d-flex justify-content-center gap-3 mt-4">
-        <button class="btn btn-danger" @click="prevpage">prev</button>
-        <button class="btn btn-danger" @click="nextpage">next</button>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <button class="btn btn-danger" @click="prevpage">prev</button>
+          <button class="btn btn-danger" @click="nextpage">next</button>
+        </div>
       </div>
     </div>
   </main>
