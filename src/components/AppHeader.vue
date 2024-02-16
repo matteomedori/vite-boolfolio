@@ -6,12 +6,15 @@ export default {
 <template>
   <header class="bg-primary">
     <div class="container d-flex justify-content-between text-white p-3">
-      <div>logo</div>
+      <div>Boolfolio</div>
       <nav>
         <ul class="list-unstyled p-0 m-0 d-flex gap-4">
-          <li>link</li>
-          <li>link</li>
-          <li>link</li>
+          <router-link :to="{ name: 'home' }" class="nav-link">
+            Home
+          </router-link>
+          <router-link :to="{ name: 'projects' }" class="nav-link">
+            Projects
+          </router-link>
         </ul>
       </nav>
     </div>
