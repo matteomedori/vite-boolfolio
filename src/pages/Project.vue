@@ -46,7 +46,7 @@ export default {
       <p>{{ project.description }}</p>
       <p v-if="project.type">Tipo di progetto: {{ project.type.name }}</p>
 
-      <ul class="list-unstyled m-0 p-0" v-if="project.technologies.length">
+      <ul class="list-unstyled m-0 p-0" v-if="project.technologies?.length">
         Tecnologie:
         <li v-for="technology in project.technologies">
           - {{ technology.name }}
