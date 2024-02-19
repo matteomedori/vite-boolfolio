@@ -2,6 +2,7 @@
 import ProjectCard from "../components/ProjectCard.vue";
 import LoadingButtons from "../components/LoadingButtons.vue";
 import AppHeader from "../components/AppHeader.vue";
+import SearchBar from "../components/SearchBar.vue";
 import axios from "axios";
 import store from "../store";
 export default {
@@ -10,23 +11,26 @@ export default {
     return {
       store,
       projects: [],
-      currentPage: 1,
       lastPage: null,
       loading: false,
+      errors: null,
     };
   },
   components: {
     ProjectCard,
     LoadingButtons,
     AppHeader,
+    SearchBar,
   },
   methods: {
     getProjects() {
       this.loading = true;
+      this.errors = null;
       axios
         .get(this.store.api.baseUrl + this.store.api.apiUrls.projects, {
           params: {
-            page: this.currentPage,
+            page: this.store.projects.currentPage,
+            key: this.store.projects.searchKey,
           },
         })
         .then((response) => {
@@ -34,35 +38,44 @@ export default {
           this.projects = response.data.data.data;
         })
         .catch((error) => {
-          console.log(error);
+          this.errors = error.response.data.message;
+          this.projects = [];
         })
         .finally(() => {
           this.loading = false;
         });
     },
     nextpage() {
-      if (this.currentPage < this.lastPage) {
-        this.currentPage++;
+      if (this.store.projects.currentPage < this.lastPage) {
+        this.store.projects.currentPage++;
         this.$router.push({
           name: "projects",
-          query: { page: this.currentPage },
+          query: {
+            page: this.store.projects.currentPage,
+            key: this.store.projects.searchKey,
+          },
         });
         this.getProjects();
       }
     },
     prevpage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+      if (this.store.projects.currentPage > 1) {
+        this.store.projects.currentPage--;
         this.$router.push({
           name: "projects",
-          query: { page: this.currentPage },
+          query: {
+            page: this.store.projects.currentPage,
+            key: this.store.projects.searchKey,
+          },
         });
         this.getProjects();
       }
     },
   },
   created() {
-    this.currentPage = this.$route.query?.page ?? 1;
+    this.store.projects.currentPage = this.$route.query?.page ?? 1;
+    this.store.projects.searchKey = this.$route.query?.key ?? null;
+
     this.getProjects();
   },
 };
@@ -72,6 +85,10 @@ export default {
   <main>
     <div class="container py-4">
       <h1 class="text-center mb-4">Projects list</h1>
+
+      <SearchBar @searchProjects="getProjects" />
+
+      <div v-if="errors">{{ errors }}</div>
 
       <LoadingButtons v-if="loading" />
 
