@@ -25,7 +25,7 @@ export default {
           if (response.data.data) {
             this.project = response.data.data;
           } else {
-            this.$router.push({ name: "not-found" });
+            this.$router.push({ path: "/not-found" });
           }
         })
         .catch((error) => {
