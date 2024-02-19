@@ -45,18 +45,38 @@ export default {
     nextpage() {
       if (this.currentPage < this.lastPage) {
         this.currentPage++;
+        this.$router.push({
+          name: "projects",
+          query: { page: this.currentPage },
+        });
         this.getProjects();
       }
     },
     prevpage() {
       if (this.currentPage > 1) {
         this.currentPage--;
+        this.$router.push({
+          name: "projects",
+          query: { page: this.currentPage },
+        });
         this.getProjects();
       }
     },
   },
   created() {
-    this.getProjects();
+    if (this.$route.query.page) {
+      this.currentPage = this.$route.query?.page;
+      this.getProjects();
+    } else {
+      this.getProjects();
+    }
+    this.$watch(
+      () => this.$route.params,
+      (toParams, previousParams) => {
+        this.currentPage = this.$route.query?.page;
+        this.getProjects();
+      }
+    );
   },
 };
 </script>
