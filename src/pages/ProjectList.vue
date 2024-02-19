@@ -3,14 +3,12 @@ import ProjectCard from "../components/ProjectCard.vue";
 import LoadingButtons from "../components/LoadingButtons.vue";
 import AppHeader from "../components/AppHeader.vue";
 import axios from "axios";
+import store from "../store";
 export default {
   name: "ProjectList",
   data() {
     return {
-      baseUrl: "http://127.0.0.1:8000",
-      apiUrls: {
-        projects: "/api/projects",
-      },
+      store,
       projects: [],
       currentPage: 1,
       lastPage: null,
@@ -26,7 +24,7 @@ export default {
     getProjects() {
       this.loading = true;
       axios
-        .get(this.baseUrl + this.apiUrls.projects, {
+        .get(this.store.api.baseUrl + this.store.api.apiUrls.projects, {
           params: {
             page: this.currentPage,
           },

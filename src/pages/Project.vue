@@ -1,6 +1,7 @@
 <script>
 import AppHeader from "../components/AppHeader.vue";
 import axios from "axios";
+import store from "../store";
 export default {
   name: "Project",
   components: {
@@ -8,10 +9,7 @@ export default {
   },
   data() {
     return {
-      baseUrl: "http://127.0.0.1:8000",
-      apiUrls: {
-        projects: "/api/projects",
-      },
+      store,
       project: {},
     };
   },
@@ -19,7 +17,10 @@ export default {
     getProjectDetail() {
       axios
         .get(
-          this.baseUrl + this.apiUrls.projects + "/" + this.$route.params.slug
+          this.store.api.baseUrl +
+            this.store.api.apiUrls.projects +
+            "/" +
+            this.$route.params.slug
         )
         .then((response) => {
           if (response.data.data) {
